@@ -1,0 +1,22 @@
+{
+  "name": "auth-geo-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tonesija/auth-geo-app.git"
+  },
+  "author": "Tonio Ercegović",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tonesija/auth-geo-app/issues"
+  },
+  "homepage": "https://github.com/tonesija/auth-geo-app#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
