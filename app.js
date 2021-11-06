@@ -4,13 +4,12 @@ require('dotenv').config()
 
 const PORT = process.env.PORT || 3000
 
-const BASE_URL = process.env.APP_URL || `http://localhost:${PORT}`
-console.log(BASE_URL)
+
 const authConfig = {
   authRequired: false,
   idpLogout: true,
   secret: process.env.SECRET,
-  baseURL: BASE_URL,
+  baseURL: process.env.BASE_URL || `http://localhost:${PORT}`,
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: 'https://dev-acy-e9kd.us.auth0.com',
   clientSecret: process.env.CLIENT_SECRET,
