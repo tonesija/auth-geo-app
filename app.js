@@ -5,7 +5,7 @@ require('dotenv').config()
 const PORT = process.env.PORT || 3000
 
 const BASE_URL = process.env.APP_URL || `http://localhost:${PORT}`
-
+console.log(BASE_URL)
 const authConfig = {
   authRequired: false,
   idpLogout: true,
