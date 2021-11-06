@@ -19,12 +19,21 @@ const authConfig = {
 
 const app = express()
 
+app.use(express.static('public'));
+app.set('view engine', 'pug')
+
 app.use(auth(authConfig))
 
 
 app.get('/', (req, res) => {
-  console.log(req.oidc.user)
-  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out')
+  req.user = {
+      isAuthenticated : req.oidc.isAuthenticated()
+  };
+  if (req.user.isAuthenticated) {
+      req.user.name = req.oidc.user.name;
+  }
+
+  res.render('index', {user: req.user})
 })
 
 app.get('/private', (req, res) => {

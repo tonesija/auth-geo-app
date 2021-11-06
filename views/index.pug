@@ -1,0 +1,14 @@
+html 
+    head 
+        title OAuth2/OpenID login demo
+    body
+        if user.isAuthenticated
+            h1 Welcome #{user.name}
+        ul 
+            li: a(href='/', title='Home') Home
+            li: a(href='/private') Private content             
+            if user.isAuthenticated
+                li: form(action="/logout", method="get")
+                    input(type="submit", value="Logout " + user.name)
+            else
+                li: a(href='/login', title='Login') Login 
