@@ -1,6 +1,7 @@
 const express = require('express')
 const { auth, requiresAuth } = require('express-openid-connect')
 require('dotenv').config()
+const { addUserToLastFiveList, getLastFiveUsers } = require("./data")
 
 const PORT = process.env.PORT || 3000
 
@@ -24,30 +25,34 @@ app.use(express.static('public'));
 app.set('view engine', 'pug')
 
 app.use(auth(authConfig))
-
+app.use(express.json());
 
 app.get('/', (req, res) => {
   req.user = {
-      isAuthenticated : req.oidc.isAuthenticated()
-  };
-  if (req.user.isAuthenticated) {
-      req.user.name = req.oidc.user.name;
+    isAuthenticated : req.oidc.isAuthenticated()
   }
+  if (req.user.isAuthenticated) {
+    req.user.name = req.oidc.user.name
 
-  res.render('index', {user: req.user})
+    res.render('index', {user: req.user, lastFive: getLastFiveUsers()})
+  } else {
+    res.render('index')
+  }
 })
 
-app.get('/private', (req, res) => {
-  const user = JSON.stringify(req.oidc.user)
-  res.send("hello", user)
+app.post('/set-location', (req, res) => {
+  req.user = {
+    isAuthenticated : req.oidc.isAuthenticated()
+  }
+  if (req.user.isAuthenticated) {
+    req.user.name = req.oidc.user.name
+    req.user.longitude = req.body.longitude
+    req.user.latitude = req.body.latitude
+    addUserToLastFiveList(req.user)
+  }
+  res.send({'msg': "Success!"})
 })
 
-app.get("/sign-up", (req, res) => {
-  res.oidc.login({
-    returnTo: '/',
-    authorizationParams: { screen_hint: "signup" },
-  });
-});
 
 app.listen(PORT, () => {
   console.log(`App started on port ${PORT}.`)
