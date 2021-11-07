@@ -27,8 +27,7 @@ html
         script.
             var x = document.getElementById("test")
             var userPosition = {}
-            var user = !{JSON.stringify(user)}
-
+            
 
             function getLocation() {
             if (navigator.geolocation) {
@@ -56,6 +55,8 @@ html
             getLocation()
 
             function setupMap(position) {
+                var user = !{JSON.stringify(user)}
+
                 var mymap = L.map('map').setView([position.coords.latitude, position.coords.longitude], 13)
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -66,14 +67,19 @@ html
                     accessToken: 'pk.eyJ1IjoidG9uaXNpamEiLCJhIjoiY2t2bzBtZ2xwMWFscjJvbzV3c2o0ZDF6MSJ9.xOlf6fjkiXMgdcxhTxsFDg'
                 }).addTo(mymap)
 
-                var lastFive = !{JSON.stringify(lastFive)}
-                for (u of lastFive) {
-                    if (u.name === user.name) continue
-                    var marker = L.marker([u.latitude, u.longitude]).addTo(mymap)
-                }
-
-                //position of visitor
+        
+                //marker of visitor
                 L.marker([position.coords.latitude, position.coords.longitude]).addTo(mymap)
+
+                //markers of the last 5 users
+                if (user.isAuthenticated){
+                    var lastFive = !{JSON.stringify(lastFive)}
+                    for (let u of lastFive) {
+                        if (u.name === user.name) continue
+                        var marker = L.marker([u.latitude, u.longitude]).addTo(mymap)
+                    }
+                }
+                
             }                
 
         link(rel="stylesheet", href="styles/style.css", type="text/css")
