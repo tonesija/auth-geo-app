@@ -2,6 +2,8 @@ const express = require('express')
 const { auth } = require('express-openid-connect')
 require('dotenv').config()
 const { addUserToLastFiveList, getLastFiveUsers } = require("./data")
+const https = require("https")
+const fs = require("fs")
 
 const PORT = process.env.PORT || 3000
 
@@ -10,7 +12,7 @@ const authConfig = {
   authRequired: false,
   idpLogout: true,
   secret: process.env.SECRET,
-  baseURL: process.env.BASE_URL || `http://localhost:${PORT}`,
+  baseURL: process.env.BASE_URL || `https://localhost:${PORT}`,
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: 'https://dev-acy-e9kd.us.auth0.com',
   clientSecret: process.env.CLIENT_SECRET,
@@ -54,6 +56,16 @@ app.post('/set-location', (req, res) => {
 })
 
 
-app.listen(PORT, () => {
-  console.log(`App started on port ${PORT}.`)
-})
+if (process.env.PORT) {
+  app.listen(PORT, () => {
+    console.log(`App started on port ${PORT}.`)
+  })
+} else {
+  https.createServer({
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+  }, app)
+  .listen(PORT, function () {
+    console.log(`Server running at https://localhost:${PORT}/`);
+  })
+}

@@ -68,7 +68,8 @@ html
         
                 //marker of visitor
                 var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(mymap)
-                marker.bindPopup("<b>"+user.name+"</b><br>Longitude: "+position.coords.longitude+"<br>Latitude: "+position.coords.latitude)
+                username = user.name || "Your location:"
+                marker.bindPopup("<b>"+username+"</b><br>Longitude: "+position.coords.longitude+"<br>Latitude: "+position.coords.latitude)
 
                 //markers of the last 5 users
                 if (user.isAuthenticated){
