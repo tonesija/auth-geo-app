@@ -34,9 +34,9 @@ app.get('/', (req, res) => {
   if (req.user.isAuthenticated) {
     req.user.name = req.oidc.user.name
 
-    res.render('index', {user: req.user, lastFive: getLastFiveUsers()})
+    res.render('index', {user: req.user, lastFive: getLastFiveUsers(), mapApiKey: process.env.MAP_API_KEY})
   } else {
-    res.render('index', {user: req.user, lastFive: []})
+    res.render('index', {user: req.user, lastFive: [], mapApiKey: process.env.MAP_API_KEY})
   }
 })
 

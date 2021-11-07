@@ -5,14 +5,13 @@ html
         if user.isAuthenticated
             h1 Welcome #{user.name}
         ul 
-            li: a(href='/', title='Home') Home
             if user.isAuthenticated
                 li: form(action="/logout", method="get")
                     input(type="submit", value="Logout " + user.name)
             else
                 li: a(href='/login', title='Login') Login 
 
-        p(id="test")
+        p(id="text")
         
 
         div(id="map")
@@ -24,21 +23,19 @@ html
             integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
             crossorigin="")
 
-        script.
-            var x = document.getElementById("test")
-            var userPosition = {}
-            
-
+        script.            
             function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showAndSendPosition)
             } else {
-                x.innerHTML = "Geolocation is not supported by this browser."
+                document.getElementById("text").innerHTML =     
+                    "Geolocation is not supported by this browser."
             }
             }
             function showAndSendPosition(position) {
-                x.innerHTML = "Latitude: " + position.coords.latitude +
-                "<br>Longitude: " + position.coords.longitude
+                document.getElementById("text").innerHTML =     
+                    "Latitude: " + position.coords.latitude +
+                    "<br>Longitude: " + position.coords.longitude
                 sendPosition(position)
                 setupMap(position)
             }
@@ -57,6 +54,7 @@ html
             function setupMap(position) {
                 var user = !{JSON.stringify(user)}
 
+                //create map
                 var mymap = L.map('map').setView([position.coords.latitude, position.coords.longitude], 13)
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -64,12 +62,13 @@ html
                     id: 'mapbox/streets-v11',
                     tileSize: 512,
                     zoomOffset: -1,
-                    accessToken: 'pk.eyJ1IjoidG9uaXNpamEiLCJhIjoiY2t2bzBtZ2xwMWFscjJvbzV3c2o0ZDF6MSJ9.xOlf6fjkiXMgdcxhTxsFDg'
+                    accessToken: !{JSON.stringify(mapApiKey)},
                 }).addTo(mymap)
 
         
                 //marker of visitor
-                L.marker([position.coords.latitude, position.coords.longitude]).addTo(mymap)
+                var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(mymap)
+                marker.bindPopup("<b>"+user.name+"</b><br>Longitude: "+position.coords.longitude+"<br>Latitude: "+position.coords.latitude)
 
                 //markers of the last 5 users
                 if (user.isAuthenticated){
@@ -77,6 +76,7 @@ html
                     for (let u of lastFive) {
                         if (u.name === user.name) continue
                         var marker = L.marker([u.latitude, u.longitude]).addTo(mymap)
+                        marker.bindPopup("<b>"+u.name+"</b><br>Longitude: "+u.longitude+"<br>Latitude: "+u.latitude)
                     }
                 }
                 
