@@ -1,5 +1,5 @@
 const express = require('express')
-const { auth, requiresAuth } = require('express-openid-connect')
+const { auth } = require('express-openid-connect')
 require('dotenv').config()
 const { addUserToLastFiveList, getLastFiveUsers } = require("./data")
 
